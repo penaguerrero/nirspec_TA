@@ -84,7 +84,7 @@ def bg_correction(img, bg_method=None, bg_value=None, bg_frac=None, verbose=True
         sorted_img = np.sort(np.ravel(img))   # flatten the image and sort it
         xsize = np.shape(img)[1]
         ysize = np.shape(img)[0]
-        idx_bg = np.floor(bg_frac * xsize * ysize)
+        idx_bg = int(np.floor(bg_frac * xsize * ysize))
         # If at the edge, correct
         if idx_bg == np.shape(sorted_img)[0]:
             idx_bg -= 1
@@ -450,7 +450,7 @@ def find_centroid(fits_file, bg_corr_info, recursive_centroids_info, display_cen
     # Read FITS image
     #img = fits.open(fits_file)
     #img.info()
-    #raw_input()
+    #input()
     #hdr = fits.getheader(fits_file, 0)
     #print("** HEADER:", hdr)
     master_img = fits.getdata(fits_file, 0)
@@ -582,23 +582,9 @@ def get_mindiff(d1, d2, d3):
 def get_raw_star_directory(path4starfiles, scene, shutters, noise, redo=True):
     """
     This function returns a list of the directories (positions 1 and 2) to be studied.
-    Possible paths to Scenes 1 and 2 directories in directory PFforMaria:
-        path_scene1_slow = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 first NRS/postage"
-        path_scene1_slow_nonoise = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 first NRS no_noise/postage"
-        path_scene1_rapid = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 first NRSRAPID/postage"
-        path_scene1_rapid_nonoise = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 first NRS no_noise/postage"
-        path_scene1_slow_shifted = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 shifted NRS/postage"
-        path_scene1_slow_shifted_nonoise = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 shifted NRS no_noise/postage"
-        path_scene1_rapid_shifted = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 shifted NRSRAPID/postage"
-        path_scene1_rapid_shifted_nonoise = "Scene_1_AB23/NIRSpec_TA_Sim_AB23 shifted NRS no_noise/postage"
-        path_scene2_slow = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 first NRS/postage"
-        path_scene2_slow_nonoise = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 first NRS no_noise/postage"
-        path_scene2_rapid = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 first NRSRAPID/postage"
-        path_scene2_rapid_nonoise = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 first NRSRAPID no_noise/postage"
-        path_scene2_slow_shifted = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 shifted NRS/postage"
-        path_scene2_slow_shifted_nonoise = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 shifted NRS no_noise/postage"
-        path_scene2_rapid_shifted = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 shifted NRSRAPID/postage"
-        path_scene2_rapid_shifted_nonoise = "Scene_2_AB1823/NIRSpec_TA_Sim_AB1823 shifted NRSRAPID no_noise/postage"
+    Possible paths to Scenes 1 and 2 directories in directory sim_scenes:
+        path_scene1_rapid = "Scene_1_AB23/NRSRAPID_TA_real_Sim_2017222173523/postage_redo10"
+        path_scene1_rapid_shifted = "Scene_1_AB23/NRSRAPID_TA_real_Sim_2017222173639/postage_redo_shifted"
     Args:
         path4starfiles -- string, path to get to the files
         scene          -- integer, either 1 or 2
@@ -608,6 +594,8 @@ def get_raw_star_directory(path4starfiles, scene, shutters, noise, redo=True):
     Returns:
         dir2test_list = A list of strings with the paths to position files 1 and 2
     """
+    """
+    ### This section will be commented out since the case has been narrowed down to NRSRAPID real for the ne TA scipts.
     # define shutter velocity to be used
     shutter_vel = "NRS"   # for slow case
     if shutters == "rapid":
@@ -616,15 +604,21 @@ def get_raw_star_directory(path4starfiles, scene, shutters, noise, redo=True):
     noise_level = " no_noise"
     if noise == "real":
         noise_level = ""
+    """
     # define directory path for scenario 1
-    position1 = path4starfiles+"Scene_"+repr(scene)+"_AB23/NIRSpec_TA_Sim_AB23 first "+shutter_vel+noise_level+"/postage"
-    position2 = path4starfiles+"Scene_"+repr(scene)+"_AB23/NIRSpec_TA_Sim_AB23 shifted "+shutter_vel+noise_level+"/postage"
-    if scene == 2:        
+    position1 = path4starfiles+"Scene_"+repr(scene)+"_AB23/NRSRAPID_TA_real_Sim_2017222173523/postage_redo10"
+    position2 = path4starfiles+"Scene_"+repr(scene)+"_AB23/NRSRAPID_TA_real_Sim_2017222173639/postage_redo10_shifted"
+    if scene == 2:
+        print("Scene 2 is not being used for this exercise. Exiting.")
+        exit()
+    """
+    ### This section will be commented out since the case has been narrowed down to NRSRAPID real for the ne TA scipts.
         position1 = path4starfiles+"Scene_"+repr(scene)+"_AB1823/NIRSpec_TA_Sim_AB1823 first "+shutter_vel+noise_level+"/postage"
         position2 = path4starfiles+"Scene_"+repr(scene)+"_AB1823/NIRSpec_TA_Sim_AB1823 shifted "+shutter_vel+noise_level+"/postage"
     if redo:
         position1 += "_redo"
         position2 += "_redo"
+    """
     dir2test_list = [position1, position2]
     return dir2test_list    
     
@@ -1273,7 +1267,7 @@ def read_star_param_files(test_case, path4starfiles=None, paths_list=None):
     # *** THE star_parameters.txt FILES in the postage stamps directory HAVE THE SAME DATA FOR BOTH DETECTORS.
 
     # Read fits table with benchmark data
-    main_path_infiles = "../PFforMaria/"
+    main_path_infiles = "../sim_scenes/"
     S1path2listfile = main_path_infiles+"Scene_1_AB23"
     S1list_file1 = "simuTA20150528-F140X-S50-K-AB23.list"
     S1positions_file1 = "simuTA20150528-F140X-S50-K-AB23_positions.fits" 
@@ -1466,7 +1460,7 @@ def TEST1(detector, transf_direction, stars, case, bench_starP1, avg_benchV23, P
         print (" Centroid Window 3: ", avgx3[0], avgy3[0], T1_V2_3[0], T1_V3_3[0], avg_benchV2[0], avg_benchV3[0])
         print (" Centroid Window 5: ", avgx5[0], avgy5[0], T1_V2_5[0], T1_V3_5[0], avg_benchV2[0], avg_benchV3[0])
         print (" Centroid Window 7: ", avgx7[0], avgy7[0], T1_V2_7[0], T1_V3_7[0], avg_benchV2[0], avg_benchV3[0])
-        raw_input(" * press enter to continue... \n")
+        input(" * press enter to continue... \n")
     # Organize results
     T1_transformations = [T1_V2_3, T1_V3_3, T1_V2_5, T1_V3_5, T1_V2_7, T1_V3_7]
     T1_diffs = [T1_diffV2_3, T1_diffV3_3, T1_diffV2_5, T1_diffV3_5, T1_diffV2_7, T1_diffV3_7]
@@ -1526,7 +1520,7 @@ def TEST2(detector, transf_direction, stars, case, bench_starP1, avg_benchV23, P
         print (" Centroid Window 3: ", x13[0], y13[0], x23[0], y23[0], T2_V2_3[0], T2_V3_3[0], avg_benchV2[0], avg_benchV3[0])
         print (" Centroid Window 5: ", x15[0], y15[0], x25[0], y25[0], T2_V2_5[0], T2_V3_5[0], avg_benchV2[0], avg_benchV3[0])
         print (" Centroid Window 7: ", x17[0], y17[0], x27[0], y27[0], T2_V2_7[0], T2_V3_7[0], avg_benchV2[0], avg_benchV3[0])
-        raw_input(" * press enter to continue... \n")
+        input(" * press enter to continue... \n")
     # Organize results
     T2_transformations = [T2_V2_3, T2_V3_3, T2_V2_5, T2_V3_5, T2_V2_7, T2_V3_7]
     T2_diffs = [T2_diffV2_3, T2_diffV3_3, T2_diffV2_5, T2_diffV3_5, T2_diffV2_7, T2_diffV3_7]
@@ -1585,7 +1579,7 @@ def TEST3(detector, transf_direction, stars, case, bench_starP1, bench_Vs, P1P2d
         print (" Centroid window 3 last: ", x13[-1], y13[-1], x23[-1], y23[-1], T3_V2_13[-1], T3_V3_13[-1], T3_V2_23[-1], T3_V3_23[-1], bench_V2P1[-1], bench_V3P1[-1], bench_V2P2[-1], bench_V3P2[-1])
         print (" Centroid window 5 last: ", x15[-1], y15[-1], x25[-1], y25[-1], T3_V2_13[-1], T3_V3_13[-1], T3_V2_23[-1], T3_V3_23[-1], bench_V2P1[-1], bench_V3P1[-1], bench_V2P2[-1], bench_V3P2[-1])
         print (" Centroid window 7 last: ", x17[-1], y17[-1], x27[-1], y27[-1], T3_V2_13[-1], T3_V3_13[-1], T3_V2_23[-1], T3_V3_23[-1], bench_V2P1[-1], bench_V3P1[-1], bench_V2P2[-1], bench_V3P2[-1])
-        raw_input(" * press enter to continue... \n")
+        input(" * press enter to continue... \n")
     # Organize results
     T3_transformationsP1 = [T3_V2_13, T3_V3_13, T3_V2_15, T3_V3_15, T3_V2_17, T3_V3_17]
     T3_transformationsP2 = [T3_V2_23, T3_V3_23, T3_V2_25, T3_V3_25, T3_V2_27, T3_V3_27]
@@ -1936,8 +1930,11 @@ def get_stats(T_transformations, T_diffs, T_benchVs_list, Nsigma, max_iterations
     #Tbench_V2, Tbench_V3 = new_trues[0], new_trues[1]
 
     # Do N-sigma rejection
+    print("Centroiding window of 3x3 pixels: ")
     TsigmaV2_3, TmeanV2_3, TsigmaV3_3, TmeanV3_3, TnewV2_3, TnewV3_3, Tniter_3, Tlines2print_3, rej_elements_3 = Nsigma_rejection(Nsigma, T_diffV2_3, T_diffV3_3, max_iterations)
+    print("Centroiding window of 5x5 pixels: ")
     TsigmaV2_5, TmeanV2_5, TsigmaV3_5, TmeanV3_5, TnewV2_5, TnewV3_5, Tniter_5, Tlines2print_5, rej_elements_5 = Nsigma_rejection(Nsigma, T_diffV2_5, T_diffV3_5, max_iterations)
+    print("Centroiding window of 7x7 pixels: ")
     TsigmaV2_7, TmeanV2_7, TsigmaV3_7, TmeanV3_7, TnewV2_7, TnewV3_7, Tniter_7, Tlines2print_7, rej_elements_7 = Nsigma_rejection(Nsigma, T_diffV2_7, T_diffV3_7, max_iterations)
     # organize the results
     st_devsAndMeans = [Tstdev_V2_3, Tmean_V2_3, Tstdev_V2_5, Tmean_V2_5, Tstdev_V2_7, Tmean_V2_7,
@@ -2044,12 +2041,12 @@ def printTESTresults(stars_sample, case, test2perform, diffs_in_arcsecs, Tstdev_
     #line4 = "# {:<5} {:<20} {:<40} {:<40} {:<38} {:<28} {:<23} {:<15}".format(
     #                "Star", "BG_value", "Pos_centroid_win_3", "Pos_centroid_win_5", "Pos_centroid_win_7",
     #                "True_Pos", "MinDiff", "Centroid Win 3 - True")
-    line4 = "# {:<5} {:<16} {:<38} {:<45} {:<28} {:<23} {:<15}".format(
+    line4 = "# {:<5} {:<16} {:<38} {:<50} {:<26} {:<18} {:<15}".format(
                     "Star", "BG_value", "Pos_centroid_win_3", "CorrPos_centroid_win_3",
                     "True_Pos", "MinDiff", "CorrPosCentroidWin3 - True")
     #line5 = "# {:>10} {:>15} {:>17} {:>22} {:>17} {:>22} {:>22} {:>17} {:>17} {:>12} {:>3} {:>17} {:>18} ".format(background_method,
     #                "V2", "V3", "V2", "V3", "V2", "V3", "V2", "V3", "V2", "V3", "V2", "V3")
-    line5 = "# {:>10} {:>15} {:>17} {:>22} {:>17} {:>22} {:>17} {:>12} {:>3} {:>17} {:>18} ".format(background_method,
+    line5 = "# {:>10} {:>15} {:>17} {:>22} {:>17} {:>22} {:>17} {:>15} {:>3} {:>17} {:>18} ".format(background_method,
                     "V2", "V3", "corrV2", "corrV3", "V2", "V3", "V2", "V3", "offsetV2", "offsetV3")
     print (line0)
     print (line0bis)
@@ -2135,7 +2132,7 @@ def printTESTresults(stars_sample, case, test2perform, diffs_in_arcsecs, Tstdev_
         #TrueV3_5 = T_V3_5[i]+float(TLSlines2print_5[1].split()[6])
         #TrueV2_7 = T_V2_7[i]+float(TLSlines2print_7[1].split()[3])
         #TrueV3_7 = T_V3_7[i]+float(TLSlines2print_7[1].split()[6])
-        line6 = "{:<5} {:<5} {:>20}  {:<20} {:>18}  {:<20} {:>17}  {:<17}  {:>5} {:>3} {:>23}  {:>19} ".format(
+        line6 = "{:<5} {:<5} {:>20}  {:<22} {:>18}  {:<20} {:>19}  {:<19}  {:>4} {:>2} {:>23}  {:<23} ".format(
                     st, background2use,
                     T_V2_3[i], T_V3_3[i], TrueV2_3, TrueV3_3,
                     Tbench_V2_list[i], Tbench_V3_list[i],
@@ -2156,12 +2153,12 @@ def writePixPos(save_text_file, show_centroids, output_file, lines4screenandfile
     """
     This function writes a text file with the measured centroids (in pixel space).
     Args:
-        save_text_file: True or False
-        show_centroids: True or False
-        output_file: name of the output file
+        save_text_file: boolean, True or False
+        show_centroids: boolean, True or False
+        output_file: str, name of the output file
         lines4screenandfile: list of lines to be shown on screen and in the file at the top (column headers)
         stars_sample: list of stars to be studied
-        background2use: a float value with the background value to be used as fixed or fractional
+        background2use: float, value with the background value to be used as fixed or fractional
         data2write: list of 7 lists of the same length (x and y positions, true center, lower left coordinates,
                     star magnitudes, centroid window size with minimum difference with respect to true
                     center -- either 3, 5, or 7)
@@ -2249,8 +2246,8 @@ def read_bad_stars(scene, verbose):
         ugly_stars = list of stars of the 'ugly' stars
     """
     # paths to files
-    scene1_bad_stars_file = os.path.abspath("../bad_stars/scene1_bad_stars.txt")
-    scene2_bad_stars_file = os.path.abspath("../bad_stars/scene2_bad_stars.txt")
+    scene1_bad_stars_file = os.path.abspath("OSS_candidate_stars/scene1_bad_stars.txt")
+    scene2_bad_stars_file = os.path.abspath("OSS_candidate_stars/scene2_bad_stars.txt")
     # read files ad get lists
     if scene == 1:
         badanduglies, uglies = np.loadtxt(scene1_bad_stars_file, comments="#", skiprows=3, unpack=True)

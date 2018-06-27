@@ -1,18 +1,11 @@
-from __future__ import print_function, division
-from glob import glob
-import numpy as np
 import os
 import time
-import random
-import string
+from collections import OrderedDict
+from glob import glob
 
 # other code
 import testXrandom_stars as tx
-import TA_functions as TAf
-import v2v3plots as vp
 
-
-print("Modules correctly imported! \n")
 
 
 """
@@ -24,6 +17,12 @@ DESCRIPTION:
 
 
 NOTES:
+
+
+    -> Data for testing software with new posatage stamps (as of June 2018) can be located at:
+        /grp/jwst/wit4/nirspec/nirspec_TA
+
+
      TEST1 - Average positions P1 and P2, transform to V2-V3 space, and compare to average
              reference positions (V2-V3 space)
      TEST2 - Transform individual positions P1 and P2 to V2-V3 space, average V2-V3 space
@@ -36,7 +35,7 @@ NOTES:
 
     * case depends on scene, noise, background value, and shutter velocity; results in 36 files per scene.
 
-    * The tests are performed on ESA data in the following directories on central sotrage:
+    * The tests are performed on ESA data in the following directories on central sotre:
         - /grp/jwst/wit4/nirspec/PFforMaria/Scene_1_AB23
             (which contains 200 closer to "real" stars of magnitude 23: cosmic rays, hot
             pixels, noise, and some shutters closed; and an ideal case)
@@ -47,6 +46,7 @@ NOTES:
         sub-cases will be tested.
         ** The simulated data is described in detail in the NIRSpec Technical Note NTN-2015-013, which
         is in /grp/jwst/wit4/nirspec/PFforMaria/Documentation.
+
 
 """
 
@@ -60,20 +60,32 @@ def get_starsets():
     This function reads star sets from text file in reference_star_candidate_sets_for_testing.txt
 
     Returns:
-        star_sets = list star lists of variable length
+        star_sets = dictionary, contains set number, number of stars in the set, set ID, and the list of star numbers.
     '''
-    # star sets
-    star_sets = []
-    star_file = '../reference_star_candidate_sets_for_testing.txt'
+    # read the star sets from the following text file
+    star_file = 'OSS_candidate_stars/input_reference_star_sets.txt'
     st = open(star_file, 'r')
     print ('\n Reading star sets from:', star_file)
+    # star sets dictionary
+    star_sets_dict = OrderedDict()
     for line in st.readlines():
-        line_set = line.split()
-        for i, star in enumerate(line_set):
-            line_set[i] = int(star)
-        star_sets.append(line_set)
+        line.replace("\n", "")
+        line_list = line.split()
+        star_set = []
+        for i, item in enumerate(line_list):
+            if i == 0:
+                set_number = item
+                star_sets_dict[set_number] = {}
+            if i == 1:
+                star_sets_dict[set_number]["number_of_stars"] = int(item)
+            if i == 2:
+                star_sets_dict[set_number]["set_ID"] = int(item)
+            if i > 2:
+                star_set.append(int(item))
+            if i == len(line_list)-1:
+                star_sets_dict[set_number]["star_set"] = star_set
     st.close()
-    return star_sets
+    return star_sets_dict
 
 
 #######################################################################################################################
@@ -84,7 +96,7 @@ if __name__ == '__main__':
 
 
     # SET PARAMETERS
-    save_summary_file = False          # Save the text file with main V2 and V3 for all OSS candidate star sets?
+    save_summary_file = True           # Save the text file with main V2 and V3 for all OSS candidate star sets?
     do_plots = False                   # 1. Least squares plot in V2/V3 space showing the true position (0,0)
     #                                       and the mean of the three calculation cases:  Averaging in pixel space,
     #                                       averaging on sky, and no averaging : True or False
@@ -94,7 +106,7 @@ if __name__ == '__main__':
     output_full_detector = True        # Give resulting coordinates in terms of full detector: True or False
     show_onscreen_results = True       # Want to show on-screen resulting V2s, V3s and statistics? True or False
     show_pixpos_and_v23_plots = False  # Show the plots of x-y and v2-v3 residual positions?
-    save_text_file = False             # Want to save the text file of comparison? True or False
+    save_text_file = True              # Want to save the text file of comparison? True or False
     keep_bad_stars = False             # Keep the bad stars in the sample (both positions measured wrong)? True or False
     keep_ugly_stars = True             # Keep the ugly stars (one position measured wrong)? True or False
     perform_abs_threshold = True       # Perform abs_threshold routine (True) or only perform least squares routine (False)
@@ -104,8 +116,8 @@ if __name__ == '__main__':
     max_iters_Nsig = 100               # Max number of iterations for N-sigma function: integer
 
     # set paths
-    gen_path = os.path.abspath('../OSS_candidate_stars/')
-    path4results = '../OSS_candidate_stars/'
+    gen_path = os.path.abspath('OSS_candidate_stars/')
+    path4results = '../results_OSScandidatestars/'
 
     ######################################################
 
@@ -167,29 +179,25 @@ if __name__ == '__main__':
                                                                                     'Iter', 'Removed*s',
                                                                                     'Removed_Stars_IDs')
     if save_summary_file:
-        #star_sets_textfile_Cwin3 = os.path.join('../', 'AllStars_results_Cwin3.txt')
-        #star_sets_textfile_Cwin5 = os.path.join('../', 'AllStars_results_Cwin5.txt')
-        #star_sets_textfile_Cwin7 = os.path.join('../', 'AllStars_results_Cwin7.txt')
-        star_sets_textfile_Cwin3 = os.path.join(gen_path, 'OSScandidates_results_Cwin3.txt')
-        star_sets_textfile_Cwin5 = os.path.join(gen_path, 'OSScandidates_results_Cwin5.txt')
-        star_sets_textfile_Cwin7 = os.path.join(gen_path, 'OSScandidates_results_Cwin7.txt')
-        sstf3 = open(star_sets_textfile_Cwin3, 'w')
-        sstf5 = open(star_sets_textfile_Cwin5, 'w')
-        sstf7 = open(star_sets_textfile_Cwin7, 'w')
-        sstf3.write(col_hdr+"\n")
-        sstf5.write(col_hdr+"\n")
-        sstf7.write(col_hdr+"\n")
-        sstf3.close()
-        sstf5.close()
-        sstf7.close()
+        print("Creating summary files... ")
+        star_sets_textfile_Cwin3 = os.path.join(path4results, 'OSScandidates_results_Cwin3.txt')
+        star_sets_textfile_Cwin5 = os.path.join(path4results, 'OSScandidates_results_Cwin5.txt')
+        star_sets_textfile_Cwin7 = os.path.join(path4results, 'OSScandidates_results_Cwin7.txt')
+        print(star_sets_textfile_Cwin3)
+        with open(star_sets_textfile_Cwin3, 'w') as sstf3:
+            sstf3.write(col_hdr+"\n")
+        with open(star_sets_textfile_Cwin5, 'w') as sstf5:
+            sstf5.write(col_hdr+"\n")
+        with open(star_sets_textfile_Cwin7, 'w') as sstf7:
+            sstf7.write(col_hdr+"\n")
+        print("   Done.")
 
-    star_sets = get_starsets()
+    # get the star sets from the text file
+    star_sets_dict = get_starsets()
 
-    # all stars of one detector or both
-    #star_sets = [[s+1 for s in range(200)]]
-
-    for i, stars_sample in enumerate(star_sets):
+    for star_set_number, set_dict in star_sets_dict.items():
         # order the star list from lowest to highest number
+        stars_sample = set_dict["star_set"]
         stars_sample.sort(key=lambda xx: xx)
 
         # Determine number of stars in sample
@@ -209,9 +217,18 @@ if __name__ == '__main__':
         secondary_params = [secondary_params1, secondary_params2, secondary_params3]
 
         # run the test and get resutls
-        extra_string = '_starset'+repr(i+1)
+        set_ID = set_dict["set_ID"]
+        extra_string = '_starset'+repr(set_ID)
+        print ("Running test for star set number: ", star_set_number, ", which is set ID : ", extra_string)
         results_all_tests = tx.run_testXrandom_stars(stars_sample, primary_params, secondary_params,
                                                      path4results, gen_path, extra_string)
+        if save_text_file:
+            # Rename the output test files according to the set ID so that files do not get overwritten in the
+            # directory resultsXrandomstars.
+            txtfiles_in_resultsXrandomstars = glob("../resultsXrandomstars/*.txt")
+            for txtXran in txtfiles_in_resultsXrandomstars:
+                if "starster" not in txtXran:
+                    txtXran.replace(".txt", extra_string+".txt")
 
 
         for resTest in results_all_tests:
@@ -294,23 +311,23 @@ if __name__ == '__main__':
                 for idx_re in rejected_elementsLS[s]:
                     rejected_stars.append(stars_in_set[idx_re])
             # print final results for each centroid window of each test
-            line2print = '{:<12} {:>18} {:>18} {:>18} {:>18} {:>18} {:>6} {:>10} {:>20}'.format(i+1, T1meanV2, T1meanV3,
+            line2print = '{:<12} {:>18} {:>18} {:>18} {:>18} {:>18} {:>6} {:>10} {:>20}'.format(star_set_number, T1meanV2, T1meanV3,
                                                                                         print_side_values[0],
                                                                                         print_side_values[2],
                                                                                         T1mean_theta,
                                                                                         iterations[s], to_stars_removed,
-                                                                                        rejected_stars)
+                                                                                        repr(rejected_stars))
+            print('Centroid Window of '+repr(cwin)+'x'+repr(cwin)+' pixels: ')
             print (col_hdr)
             print (line2print)
             if save_summary_file:
-                tf = open(star_sets_textfile_Cwin3, 'a')
-                if cwin == 5:
-                    tf = open(star_sets_textfile_Cwin5, 'a')
-                if cwin == 7:
-                    tf = open(star_sets_textfile_Cwin7, 'a')
-                tf.write(line2print+"\n")
-                tf.close()
+                with open(star_sets_textfile_Cwin3, 'a') as tf:
+                    if cwin == 5:
+                        tf = open(star_sets_textfile_Cwin5, 'a')
+                    if cwin == 7:
+                        tf = open(star_sets_textfile_Cwin7, 'a')
+                    tf.write(line2print+"\n")
+        print("Lines added to text files.")
 
-        raw_input()
 
     print ("\n Script 'OSScandidatestars.py' finished! Took  %s  seconds to finish. \n" % (time.time() - start_time))

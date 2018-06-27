@@ -1,0 +1,27 @@
+# Known bad stars of Scene 2 = mag 18 though 23
+#Star  Reason
+1      # MSA bar?, Tony=bad shutter
+14     # hot pixel, Tony=no data in PF image
+22     # binary, Tony=bad shutter x
+57     # binary
+58     # missing data?
+60     # binary
+71     # binary
+74     # binary
+#87    # Tony=no apparent reason
+89     # hot pixel? Tony=nearby bad shutter
+#99    # MSA bar
+105    # Tony=corner binary x
+#109    # MSA bar
+118    # binary? Tony=no apparent reason
+119    # binary
+#124   # Tony=binary
+#139   # Tony=close binary
+146    # Tony=bad shutters x
+148    # binary
+150    # binary, Tony=bad column
+158    # binary, bad shutter
+#165   # MSA bar
+168    # Tony=binary x
+169    # Tony=binary x
+#190   # Tony=no apparent reason

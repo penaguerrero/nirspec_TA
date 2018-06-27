@@ -64,8 +64,8 @@ def checkbox_2D(image, checkbox, xwidth=0, ywidth=0, verbose=True, debug=False):
         sumpeak = 0
         sumpeak_list = []
         xy_peak_list = []
-        for ii in xrange(xsize - checkbox +1):  # the +1 is because python stops the loop at idx=n
-            for jj in xrange(ysize - checkbox +1):  # the +1 is because python stops the loop at idx=n
+        for ii in range(xsize - checkbox +1):  # the +1 is because python stops the loop at idx=n
+            for jj in range(ysize - checkbox +1):  # the +1 is because python stops the loop at idx=n
                 t = np.sum(image[jj:jj+checkbox, ii:ii+checkbox])
                 if t > sumpeak:
                     xpeak = ii + chw + 1   
@@ -164,7 +164,7 @@ def checkbox_1D(image, checkbox, xwidth=0, debug=False):
     if checkbox != xsize and checkbox != ysize:
         xpeak = 0
         sumpeak = 0
-        for ii in xrange(xsize - checkbox +1):  # the +1 is because python stops the loop at idx=n
+        for ii in range(xsize - checkbox +1):  # the +1 is because python stops the loop at idx=n
             t = np.sum(vector[ii:ii+checkbox])
             if t > sumpeak:
                 xpeak = ii + 1
@@ -286,8 +286,8 @@ def centroid_2D(image, checkbox_center, checkbox_halfwidth, max_iter=0, threshol
         if verbose:
             print ('(centroid_2D): WARNING - upper limit in y is out of data, setting to 31.')
 
-    for ii in xrange(lolim_x, uplim_x+1):  # the +1 is because python stops the loop at idx=n
-        for jj in xrange(lolim_y, uplim_y+1):  # the +1 is because python stops the loop at idx=n
+    for ii in range(lolim_x, uplim_x+1):  # the +1 is because python stops the loop at idx=n
+        for jj in range(lolim_y, uplim_y+1):  # the +1 is because python stops the loop at idx=n
             xloc = ii + 1
             yloc = jj + 1
 
@@ -334,7 +334,7 @@ def centroid_2D(image, checkbox_center, checkbox_halfwidth, max_iter=0, threshol
     if verbose:
         print ('(centroid_2D): Maximum iterations = ', max_iter)   # Added by M. Pena-Guerrero
     
-    for kk in xrange(max_iter +1):  # the +1 is because python stops the loop at idx=n
+    for kk in range(max_iter +1):  # the +1 is because python stops the loop at idx=n
         num_iter += 1
         c_sum = 0
         xsum = 0
@@ -353,8 +353,8 @@ def centroid_2D(image, checkbox_center, checkbox_halfwidth, max_iter=0, threshol
         #    print ('(np.floor(old_ycen - yhw) - 1, np.ceil(old_ycen + yhw) - 1): ', np.floor(old_ycen - yhw) - 1, np.ceil(old_ycen + yhw) - 1) 
         #    print ('iteration number: ', num_iter)
                 
-        for ii in xrange(np.int(x_range[0]), np.int(x_range[1]) +1):  # the +1 is because python stops the loop at idx=n
-            for jj in xrange(np.int(y_range[0]), np.int(y_range[1]) +1):  # the +1 is because python stops the loop at idx=n
+        for ii in range(np.int(x_range[0]), np.int(x_range[1]) +1):  # the +1 is because python stops the loop at idx=n
+            for jj in range(np.int(y_range[0]), np.int(y_range[1]) +1):  # the +1 is because python stops the loop at idx=n
 
                 # Initalize weights to zero
                 xweight = 0
@@ -486,7 +486,7 @@ def centroid_1D(image, xpeak, xhw, debug=False):
     c_sum = 0.0
     xcen = 0.0
         
-    for ii in xrange(xpeak - xhw - 1, xpeak + xhw - 1 +1):  # the +1 is because python stops the loop at idx=n
+    for ii in range(xpeak - xhw - 1, xpeak + xhw - 1 +1):  # the +1 is because python stops the loop at idx=n
         c_sum = c_sum + vector[ii]
         xloc = ii + 1
         xcen += xloc * vector[ii]
@@ -552,8 +552,8 @@ def find2D_higher_moments(image, centroid, halfwidths, c_sum):
     y_range = np.array((np.floor(ycen - yhw) - 1, np.ceil(ycen + yhw) - 1))
     
     
-    for ii in xrange(np.int(x_range[0]), np.int(x_range[1]) +1):  # the +1 is because python stops the loop at idx=n
-        for jj in xrange(np.int(y_range[0]), np.int(y_range[1]) +1):  # the +1 is because python stops the loop at idx=n
+    for ii in range(np.int(x_range[0]), np.int(x_range[1]) +1):  # the +1 is because python stops the loop at idx=n
+        for jj in range(np.int(y_range[0]), np.int(y_range[1]) +1):  # the +1 is because python stops the loop at idx=n
             
             xloc = ii - np.floor(xcen)
             yloc = jj - np.floor(ycen)
@@ -630,7 +630,7 @@ def find1D_higher_moments(image, xcen, xhw, c_sum):
     # Set up x and y centroid scanning ranges
     x_range = np.array((np.floor(xcen - xhw) - 1, np.ceil(xcen + xhw) - 1))
 
-    for ii in xrange(np.int(x_range[0]), np.int(x_range[1]) +1):  # the +1 is because python stops the loop at idx=n
+    for ii in range(np.int(x_range[0]), np.int(x_range[1]) +1):  # the +1 is because python stops the loop at idx=n
         xloc = (ii + 1) - np.floor(xcen)
         
         xweight = 0

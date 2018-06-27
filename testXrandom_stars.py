@@ -6,11 +6,9 @@ import numpy as np
 import os
 import time
 import random
-import copy
 
 # other code
 import TA_functions as TAf
-import parse_rejected_stars as prs
 import v2v3plots as vp
 
 print("Modules correctly imported! \n")
@@ -265,7 +263,7 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
     stars_sample.sort(key=lambda xx: xx)
     str_stars_sample = ", ".join(str(st) for st in stars_sample)
     print ("stars_sample =", str_stars_sample)
-    #raw_input("\nPress enter to continue...")
+    #input("\nPress enter to continue...")
 
     # Background cases variable setting
     bg_frac, bg_value = None, None   # for the None case
@@ -281,7 +279,7 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
         background2use = 0.0
 
     # Paths to Scenes 1 and 2 local directories: /Users/pena/Documents/PyCharm/nirspec/TargetAcquisition/
-    path4starfiles = "../PFforMaria/"
+    path4starfiles = "../sim_scenes/"
 
     # Set the case to study according to the selected scene
     str_thres = repr(threshold).replace('0.', '')
@@ -291,7 +289,6 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
     else:
         detectorScene_string = repr(detector)+"Scene"+str(scene)
     case = detectorScene_string+"_"+shutters+"_"+noise+bg_choice+repr(background2use)+'_'+thres+'_Nsigma'+repr(Nsigma)
-
     detectors = [491, 492]
 
     bench_stars, benchP1P2, LoLeftCornersP1P2, benchmark_V2V3_sampleP1P2, magnitudes = get_benchV2V3(scene,
@@ -306,7 +303,11 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
     ### Perform centroid algorithm for stars sample
 
     # start the text file with the measured centroids
-    output_file_path = "../resultsXrandomstars/centroid_txt_files/"
+    output_file_path = "../resultsXrandomstars/"
+    if not os.path.isdir(os.path.abspath(output_file_path)):
+        print("-> In script textXrandom_stars.py: ")
+        print("   Path to save results does not exist, please verify: ", os.path.abspath(output_file_path))
+        exit()
     line0 = "Centroid indexing starting at 1 !"
     line0a = "{:<5} {:<15} {:<16} {:>23} {:>32} {:>40} {:>25} {:>15} {:>9}".format("Star", "Background",
                                                                       "Centroid width: 3", "5", "7",
@@ -347,20 +348,20 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
 
     for pos, dir2test in zip(positions, dir2test_list):
         dir_stars = glob(os.path.join(dir2test,"postageout_star_*.fits"))   # get all star fits files in that directory
-        #print("does dir2test exist?", os.path.isdir(dir2test))
+        print("Does the following star path exists: ", dir2test, "? ", os.path.isdir(dir2test))
         for star in dir_stars:
             dir_star_number = int(os.path.basename(star).split()[1])
             # Test stars of detector of choice
             for st in stars_sample:
-                if st == dir_star_number: #if str(st)+" quad_       " in star:
+                if st == dir_star_number:
                     if verbose:
                         print ("Will test stars in directory: \n     ", dir2test)
                         print ("Star: ", os.path.basename(star))
                     # Make sure the file actually exists
                     star_exists = os.path.isfile(star)
                     if not star_exists:
-                        print ("The file: ", star, "\n    does NOT exist. Exiting the script.")
-                        exit()
+                        print ("The file: ", star, "\n    does NOT exist. Continuing witht the star list...")
+                        continue
 
                     # Obtain real star position and corresponding detector
                     if st <= 100:
@@ -395,7 +396,7 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
                     corr_cb_centroid_list, loleftcoords, true_center32x32, differences_true_TA = TAf.centroid2fulldetector(cb_centroid_list_in32x32pix,
                                                                                                         true_center_fulldet, detector, perform_avgcorr=Pier_corr)
                     if not output_full_detector:
-                        cb_centroid_list = cb_centroid_list_in32x32pix
+                        corr_cb_centroid_list = cb_centroid_list_in32x32pix
                         true_center = true_center32x32
                     else:
                         true_center = true_center_fulldet
@@ -482,15 +483,15 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
         print (stars_sample[0], bg_choice, x13[0], y13[0], x15[0], y15[0], x17[0], y17[0], bench_xLP1[0], bench_yLP1[0], bench_xP1[0], bench_yP1[0])
         print ("Star, BG, x23, y23, x25, y25, x27, y27, LoLeftP2 (x, y), TrueP2 (x, y)")
         print (stars_sample[0], bg_choice, x23[0], y23[0], x25[0], y25[0], x27[0], y27[0], bench_xLP2[0], bench_yLP2[0], bench_xP2[0], bench_yP2[0])
-        raw_input(" * press enter to continue... \n")
+        input(" * press enter to continue... \n")
 
     # show positions on screen
     line0 = "\n Centroid indexing starting at 1 !"
-    line0a = "{:<5} {:<15} {:<16} {:>23} {:>30} {:>44} {:>17} {:>15}".format("Star", "Background",
+    line0a = "{:<5} {:<15} {:<16} {:>33} {:>40} {:>44} {:>28} {:>4}".format("Star", "Background",
                                                                       "Centroid windows: 3", "5", "7",
-                                                                      "TruePositions", "LoLeftCoords",
+                                                                      "TruePositions", "LowerLeftCoords",
                                                                       "Mag")
-    line0b = "{:>25} {:>12} {:>16} {:>14} {:>16} {:>14} {:>16} {:>18} {:>12} {:>10}".format(
+    line0b = "{:>25} {:>18} {:>20} {:>18} {:>20} {:>18} {:>20} {:>20} {:>15} {:>6}".format(
                                                                            "x", "y", "x", "y", "x", "y",
                                                                            "TrueX", "TrueY", "LoLeftX", "LoLeftY")
     print ("Analyzing case: ", case)
@@ -498,7 +499,7 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
     print (line0a)
     print (line0b)
     for i, st in enumerate(stars_sample):
-        line1 = "{:<5} {:<10} {:<14} {:<16} {:<14} {:<16} {:<14} {:<16} {:<14} {:<16} {:<8} {:<12} {:<10.2f}".format(
+        line1 = "{:<5} {:<7} {:<19} {:<20} {:<19} {:<20} {:<19} {:<20} {:<17} {:<20} {:<6} {:<7} {:<8.2f}".format(
                                                                     int(st), background2use,
                                                                     x13[i], y13[i], x15[i], y15[i], x17[i], y17[i],
                                                                     bench_xP1[i]-bench_xLP1[i], bench_yP1[i]-bench_yLP1[i],
@@ -1203,9 +1204,9 @@ if __name__ == '__main__':
     continue_code = True
     if not perform_abs_threshold and min_elements!=4:
         print ('***** You are running the code with  min_elements =', min_elements, ' and No absolute threshold, ')
-        continue_code = raw_input('  Do you wish to continue?  y  [n]')
+        continue_code = input('  Do you wish to continue?  y  [n]')
         if continue_code == 'y':
-            raw_input('Ok, continuing... but the output files will not have a marker to know the number of minimum '
+            input('Ok, continuing... but the output files will not have a marker to know the number of minimum '
                       'elements allowed in the absolute threshold routine.  Press enter')
         else:
             exit()
