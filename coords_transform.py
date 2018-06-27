@@ -52,7 +52,7 @@ def coords_transf(transf_direction, detector, filter_input, x_input, y_input, ti
  
     
 def set_params(transf_direction, detector, filter_input, tilt, debug):
-    path2text_files = "../Coords_transforms/files_from_tony/"
+    path2text_files = "SIAF_files/files_from_tony/"
     gwa_xtil = 0.0  
     gwa_ytil = 0.0
     if not tilt:
@@ -237,7 +237,7 @@ def ct_forward(transf_direction, detector, filter_input, x_input, y_input, tilt,
     z2 = np.sqrt(1.0 - x2**2 - y2**2)
     # now do an inverse rotation around the x-axis
     x3 = x2
-    y3 = y2 - delta_theta_xrad*2
+    y3 = y2 - delta_theta_xrad**2   # Changed *2 for **2, typo found by C. Proffit May 25, 2018
     z3 = np.sqrt(1.0 - x3**2 - y3**2)
     # compute the cosines from direction cosines
     xt_corr = x3 / z3

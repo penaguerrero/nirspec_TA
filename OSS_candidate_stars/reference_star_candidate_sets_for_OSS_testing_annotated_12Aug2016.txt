@@ -1,0 +1,75 @@
+Initial delivery of reference star test cases to OSS for Standard TA.  12 August 2016  (Tony Keyes)
+
+Recommended initial test cases (from the full list of 20 cases given below):
+20-stars:  Sets 02, 01, 04
+8-stars:   Sets 06 and 07
+5-stars:   Sets 09 and 11
+
+Priority order for recommended initial test cases:  
+Sets 02, 06, 01, 07, 09, 04, 11
+
+Priority order for ALL 20 cases provided here:
+Sets 02, 01, 06, 07, 09, 04, 11, 03, 08, 05, 13, 14, 10, 15, 16, 18, 19, 17, 12, 20
+
+
+Below is a listing giving all 20 cases provided here.  The first column gives the "Set" number which is 
+simply an easy index number for quick reference.  The second column gives an "ID" number which is an 
+identifying index in our extensive database of test case simulations.  The remaining columns give the 
+star numbers from the 200-star list of the stars that comprise each test set.  Some notes about 
+each case are provided following the full 20-case listing below.  
+
+Primary cases:
+
+Set   ID     Star Numbers
+01  20-0718  147  164  193  187  173  199  180  186  131  162  69    1   50   97   46   91   41   89   78   20   
+02  20-0740  139  107  150  140  136  167  195  198  109  125  31   48   13   76   43   32   22   95   21   83   
+03  20-0760  143  180  103  179  104  187  73   78   56   10   43   72   97   29   46   13   84   94   60   45   
+04  20-2396  187  175  137  125  144  103  165  196  131  150  25   89   47    5   49   26   66   94   44   72   
+05  20-3180  139  131  135  116  180  184  195  57   64   95   63   44   54   48   29   66   16   91    3   11   
+06  08-0519  153  188  130  180  113  25   87   84   
+07  08-1670  110  155  161  131  121  108  10   75   
+08  08-4459  197  187  89   23   10   72   73   44   
+09  05-3140  110  175  182  56   31   
+10  05-2756  173  103  196  187  59   
+11  05-0584  140  108  94   80   37   
+12  05-0455  102  104  161  58   94   
+13  05-0454  109  158  64   45   73 
+
+Additional cases: 
+ 
+14  05-1824  130  185  46   61    7   
+15  08-0029  167  197  102  177  11   30   22   29   
+16  08-0520  122  126  187  138  75   24   27   19   
+17  08-0080  113  162  190  115  24   78   32   31   
+18  08-0076  167  111  75   77   58   21    1   72   
+19  08-0205  143  187  126  15   37   64   76   94   
+20  20-1207  139  149  128  148  155  175  198  64   26   10   93    9   75   16   72   44   77   55    6   80   
+
+
+Notes:
+20 stars:
+Set 01 may have up to 4 measures rejected
+Set 02 should have no measures rejected
+Set 03 may have up to 8 measures rejected
+Set 04 may have up to 12 measures rejected
+Set 05 should have no measures rejected
+
+8 Stars:
+Set 06 should have no measures rejected
+Set 07 may have up to 8 measures rejected
+Set 08 may have up to 10 measures rejected
+Set 15 should have no measures rejected
+Set 16 may have up to 7 measures rejected
+Set 17 should have no measures rejected
+Set 18 may have up to 8 measures rejected
+Set 19 may have up to 8 measures rejected
+
+5 Stars:
+Set 09 should have no measures rejected
+Set 10 may have up to 4 measures rejected
+Set 11 may have up to 3 measures rejected
+Set 12 may have up to 3 measures rejected
+Set 13 may have 1 measure rejected
+Set 14 should have no measures rejected
+
+--- end  
