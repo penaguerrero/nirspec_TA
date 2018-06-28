@@ -5,7 +5,7 @@
 The code in this repo is meant to be an exact reproduction of the OSS code so that we get
 exactly the same TA images as OSS. 
 
-* All scripts are witten in Python 3. *
+-> All scripts are witten in Python 3. 
 
 
 ## Get started
@@ -20,7 +20,7 @@ mkdir OSS_NRS_TA
 
 
 - This is the directory structure for the code to run:
-
+```
 OSS_NRS_TA
    |____src
          |________OSS_candidate_stars
@@ -33,7 +33,7 @@ OSS_NRS_TA
    
    |____results_OSScandidatestars
            |_____text files where the ```OSScandidatestars.py``` will dump results 
-  
+```  
 
 - Get the data to run the script from central store. Go into your You can locate the files 
 with:
