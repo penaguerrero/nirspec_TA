@@ -32,7 +32,7 @@ OSS_NRS_TA
            |___Scene_2_AB1823
    
    |____results_OSScandidatestars
-           |_____text files where the ```OSScandidatestars.py``` will dump results 
+           |_____text files where the OSScandidatestars.py will dump results 
 ```  
 
 - Get the data to run the script from central store. Go into your You can locate the files 
@@ -42,7 +42,7 @@ cp -rf /grp/jwst/wit4/nirspec/nirspec_TA/sim_scenes .
 ```
 
 
-- To run the code do the follwing in a terminal, under the ```src`` directory:
+- To run the code do the follwing in a terminal, under the ```src``` directory:
 ```bash
 python OSScandidatestars.py
 ```

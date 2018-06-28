@@ -173,11 +173,11 @@ if __name__ == '__main__':
         just_least_sqares = True
 
     # Prepare the text files with final results for all star sets analyzed
-    col_hdr = '{:<12} {:>18} {:>18} {:>18} {:>18} {:>18} {:>6} {:>10} {:>20}'.format('# Star_Set', 'mean_V2',
+    col_hdr = '{:<12} {:>18} {:>18} {:>20} {:>20} {:>20} {:>10} {:>10} {:>20}'.format('# Star_Set', 'mean_V2',
                                                                                     'mean_V3', 'sigma_V2',
                                                                                     'sigma_V3', 'theta',
-                                                                                    'Iter', 'Removed*s',
-                                                                                    'Removed_Stars_IDs')
+                                                                                    'Iter', 'Removed_stars',
+                                                                                    'Removed_stars_numbers')
     if save_summary_file:
         print("Creating summary files... ")
         star_sets_textfile_Cwin3 = os.path.join(path4results, 'OSScandidates_results_Cwin3.txt')
