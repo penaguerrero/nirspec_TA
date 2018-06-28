@@ -303,7 +303,7 @@ def measure_centroidsP1P2(stars_detectors, primary_params, secondary_params, sta
     ### Perform centroid algorithm for stars sample
 
     # start the text file with the measured centroids
-    output_file_path = "../resultsXrandomstars/"
+    output_file_path = "../results_OSScandidatestars/"
     if not os.path.isdir(os.path.abspath(output_file_path)):
         print("-> In script textXrandom_stars.py: ")
         print("   Path to save results does not exist, please verify: ", os.path.abspath(output_file_path))
