@@ -311,7 +311,7 @@ if __name__ == '__main__':
                 for idx_re in rejected_elementsLS[s]:
                     rejected_stars.append(stars_in_set[idx_re])
             # print final results for each centroid window of each test
-            line2print = '{:<12} {:>18} {:>18} {:>18} {:>18} {:>18} {:>6} {:>10} {:>20}'.format(star_set_number, T1meanV2, T1meanV3,
+            line2print = '{:<12} {:>20} {:>20} {:>20} {:>20} {:>20} {:>6} {:>10} {:>20}'.format(star_set_number, T1meanV2, T1meanV3,
                                                                                         print_side_values[0],
                                                                                         print_side_values[2],
                                                                                         T1mean_theta,
