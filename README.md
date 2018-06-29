@@ -43,7 +43,8 @@ OSS_NRS_TA
            |_____text files where the OSScandidatestars.py will dump results 
 ```  
 
-- Get the data to run the script from central store. Go into your You can locate the files 
+- Get the data to run the script from central store. Make sure you are in the 
+```OSS_NRS_TA``` directory, and then copy the files: 
 with:
 ```bash
 cp -rf /grp/jwst/wit4/nirspec/nirspec_TA/sim_scenes .
