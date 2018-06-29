@@ -19,6 +19,14 @@ mkdir OSS_NRS_TA
 ```
 
 
+- Clone or fork the repo. Go into the new directory ```OSS_NRS_TA```. To clone the repo, 
+at the top of this page copy the ulr that appears in the "Clone or download" green 
+button, and then type:
+```bash
+git clone the_ulr_you_copied
+```
+
+
 - This is the directory structure for the code to run:
 ```
 OSS_NRS_TA
