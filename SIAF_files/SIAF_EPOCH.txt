@@ -1,1 +1,0 @@
-The SIAF files contained in the current directory are from the April 2017 epoch.
