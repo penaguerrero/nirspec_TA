@@ -1,2 +1,2 @@
-           Slope AX             Slope AY            intercept r0x      intercept r0y
-        -1875.15100000   -9016.72300000       0.19705817       0.34302720
+           Slope AX             Slope AY            intercept rx0      intercept ry0
+         4260.83000000   -9108.78200000       0.19661401       0.34749588
